@@ -3,39 +3,55 @@
     width: 100%;
     margin: 0;
     position: relative;
-    background-color: yellowgreen;
+    background-image: url(../Images/bg.jpg);
+    overflow: hidden;
 }
 
 .player {
     height: 100px;
     width: 50px;
-    background-color: brown;
+    background-image: url('../Images/limbo.png');
     position: absolute;
-    top: 500px;
+    top: 100px;
     left: 100px;
+    z-index: 1;
     
 }
 .buttom {
-    height: 20px;
-    width: 100%;
-    background-color: black;
+    height: 600px;
+    width: 100000px;
     position: absolute;
-    top: 600px;
+    top: 200px;
     left: 0px;
+    background-image: url(../Images/bgRoad2.png);
+    background-repeat: repeat-x;
 }
 .Upperopponent {
     width: 100px;
     height: 20px;
     position: absolute;
-    left: 1100px;
-    top: 500px;
-    background-color: black;
+    left: 1400px;
+    top: 100px;
+    background-image: url(../Images/bullet.png);
 }
 .Loweropponent {
     width: 50px;
     height: 50px;
     position: absolute;
-    left: 1100px;
-    top: 550px;
-    background-color: black;
+    left: 1400px;
+    top: 150px;
+    background-color: red;
+}
+.Coin {
+    height: 50px;
+    width: 50px;
+    background-color: yellowgreen;
+    top: 20px;
+    left: 1400px;
+    position: absolute;
+}
+.Enemy {
+     height: 50px;
+    width: 50px;
+    background-color: Red;
 }
