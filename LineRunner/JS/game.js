@@ -13,10 +13,14 @@ function Game() {
     var that = this;
 
     this.initializeGame = function () {
-        that.newplayer = new Player();
+        that.score = 0;
         that.newopp = new OpponentsandCoins();
 
+        that.newplayer = new Player();
+
         that.newopp.getcurrentplayer(that.newplayer);
+
+        that.movingbackgroundLeftPosition = 0;
         that.Startgame();
     };
 
@@ -26,40 +30,88 @@ function Game() {
             if (that.mainCounter % 60 == 0)
                 that.newopp.makeRandomOpponent();
 
+            if (that.mainCounter % 8 == 0 && !that.newplayer.ismoving)
+                that.newplayer.changePlayerSprite();
+            if (that.mainCounter % 8 == 0 && that.newplayer.playerstatus == 0) {
+                that.newplayer.changerollingPlayerSprite();
+            }
             that.moveBackGround();
             that.newplayer.jumpManager();
             that.newplayer.stateManager();
             that.newopp.moveAllElementOnPath();
             that.newopp.detectCollision();
+
+            that.maintimer = window.requestAnimationFrame(that.Startgame);
+
         } else {
             that.newplayer.fallingPlayer();
+            if (that.newplayer.fallingPlayerposition >= 505) {
+                window.cancelAnimationFrame(that.maintimer);
+                that.maintimer = undefined;
+
+                that.newopp.initializeallOponent();
+                that.newplayer.initializePlayer();
+                that.initializeGame();
+
+
+            } else {
+
+                that.maintimer = window.requestAnimationFrame(that.Startgame);
+            }
+
         }
 
-        that.maintimer = window.requestAnimationFrame(that.Startgame);
     };
 
+
+
+
+
     this.moveBackGround = function () {
-        that.movingbackgroundLeftPosition -= 14;
+        that.movingbackgroundLeftPosition -= 5;
         that.movingBackGround.style.left = that.movingbackgroundLeftPosition + "px";
     };
 }
 function Player() {
     this.player = document.getElementById('player');
     this.playernormalheight = 100;
-    this.playerrollingheight = 50;
-    this.movingPlayerTopPos = 100;
-    this.fallingPlayerposition = 100;
+    this.playernormalwidth = 100;
+    this.playerrollingheight = 75;
+    this.playerrollingwidth = 75;
+    this.movingPlayerTopPos = 300;
+    this.fallingPlayerposition = 300;
     this.isfalling = false;
     this.playerCurrentHeight = 100;
-    this.playernormalTopPosition = 100;
-    this.playerrollingTopPosition = 150;
+    this.playernormalTopPosition = 300;
+    this.playerrollingTopPosition = 325;
     this.ismoving = false;
+    this.spriteXpos = 0;
+    this.spriteYpos = 0;
     this.movingdirection;
+    this.score;
     this.rollingplayerCounter = 0; //rollingplayerCounter ko value 30 bhayo bhane normal player hunxa
     this.playerstatus = 1; //1 huda normal player 0 huda rolling player
     var that = this;
 
-    this.init = function () {
+    this.initializePlayer = function () {
+        that.playernormalheight = 100;
+        that.playernormalwidth = 100;
+        that.playerrollingheight = 75;
+        that.playerrollingwidth = 75;
+        that.movingPlayerTopPos = 300;
+        that.fallingPlayerposition = 300;
+        that.isfalling = false;
+        that.playerCurrentHeight = 100;
+        that.playernormalTopPosition = 300;
+        that.playerrollingTopPosition = 325;
+        that.ismoving = false;
+        that.spriteXpos = 0;
+        that.spriteYpos = 0;
+        that.movingdirection;
+        that.rollingplayerCounter = 0;
+        that.playerstatus = 1;
+
+
     };
 
     document.onkeyup = function (e) {
@@ -77,7 +129,7 @@ function Player() {
                     }
                 case 39:
                     {
-                        alert("right");
+
                         break;
                     }
                 case 40:
@@ -92,27 +144,24 @@ function Player() {
 
     this.RollingPlayer = function () {
 
-        if (that.rollingplayerCounter > 30) {
-            that.normalPlayer();
-            that.playerstatus = 1;
-            that.ismoving = false;
-            that.rollingplayerCounter = 0;
-        } else {
-            that.rollingplayerCounter++;
-            that.player.style.height = that.playerrollingheight + "px";
-            that.player.style.top = that.playerrollingTopPosition + "px";
-            that.movingPlayerTopPos = that.playerrollingTopPosition;
-            that.playerCurrentHeight = that.playerrollingheight;
-            that.ismoving = true;
 
-        }
+        that.rollingplayerCounter++;
+        that.player.style.height = that.playerrollingheight + "px";
+        that.player.style.width = that.playerrollingwidth + "px";
+        that.player.style.top = that.playerrollingTopPosition + "px";
+        that.movingPlayerTopPos = that.playerrollingTopPosition;
+        that.playerCurrentHeight = that.playerrollingheight;
+        that.ismoving = true;
+
 
 
     };
 
     this.normalPlayer = function () {
         if (!that.isfalling) {
+            that.player.style.background = "url(mumin/1.png)";
             that.player.style.height = that.playernormalheight + "px";
+            that.player.style.width = that.playernormalwidth + "px";
             that.player.style.top = that.playernormalTopPosition + "px";
             that.movingPlayerTopPos = that.playernormalTopPosition;
             that.playerCurrentHeight = that.playernormalheight;
@@ -137,10 +186,61 @@ function Player() {
 
 
     };
+    var temp = 0;
+    this.changePlayerSprite = function () {
+        // that.player.style.background = "url(Images/mumin.png)";
 
+        if (temp == 0)
+            that.player.style.background = "url(mumin/1.png)";
+
+        if (temp == 1)
+            that.player.style.background = "url(mumin/2.png)";
+        if (temp == 2)
+            that.player.style.background = "url(mumin/3.png)";
+
+        if (temp == 3)
+            that.player.style.background = "url(mumin/4.png)";
+        if (temp == 4)
+            that.player.style.background = "url(mumin/5.png)";
+        if (temp == 5) {
+            that.player.style.background = "url(mumin/6.png)";
+            temp = -1;
+        }
+        temp++;
+
+
+    };
+
+    var temp1 = 0;
+    this.changerollingPlayerSprite = function () {
+        // that.player.style.background = "url(Images/mumin.png)";
+
+        if (temp1 == 0)
+            that.player.style.background = "url(rolling/1.png)";
+
+        if (temp1 == 1)
+            that.player.style.background = "url(rolling/2.png)";
+        if (temp1 == 2)
+            that.player.style.background = "url(rolling/3.png)";
+
+        if (temp1 == 3)
+            that.player.style.background = "url(rolling/4.png)";
+        if (temp1 == 4)
+            that.player.style.background = "url(rolling/5.png)";
+        if (temp1 == 5) {
+            that.player.style.background = "url(rolling/6.png)";
+            that.playerstatus = 1;
+            that.normalPlayer();
+            temp1 = 0;
+            that.ismoving = false;
+        }
+        temp1++;
+
+
+    };
     this.moveup = function () {
         that.ismoving = true;
-        if (that.movingPlayerTopPos < 0) {
+        if (that.movingPlayerTopPos < 175) {
             that.movingdirection = 0;
 
         } else {
@@ -159,17 +259,19 @@ function Player() {
     };
 
     this.fallingPlayer = function () {
-       
-        that.player.style.width = "100px";
-        that.player.style.height = "50px";
-        that.player.style.background = "url(Images/fallingLimbo.png)";
 
         that.fallingPlayerposition += 5;
-        that.player.style.top = that.fallingPlayerposition + "px";
+        
+        if (that.fallingPlayerposition < 500) {
+            that.player.style.background = "url(mumin/deadmumin.png)";
+            that.player.style.top = that.fallingPlayerposition + "px";
 
-        if (that.fallingPlayerposition > 600) {
-
+        } else {
+            that.isfalling = false;
+            that.normalPlayer();
         }
+
+
     };
 
 }
@@ -180,18 +282,31 @@ function OpponentsandCoins() {
     this.allElementOnPath = [];
     this.allElementOnPathposition = [];
     this.allElementOnPathClassName = [];
-    this.UpperopponentTopPosition = 100;
+    this.UpperopponentTopPosition = 300;
     this.UpperopponentHeight = 20;
-    this.coinList = [];
-    this.coinListpos = [];
-    this.Loweropponentlist = [];
-    this.Loweropponentlistposition = [];
-    this.LoweropponentTopPosition = 150;
-    this.LoweropponentHeight = 50;
+
+    this.LoweropponentTopPosition = 325;
+    this.LoweropponentHeight = 75;
+
+    this.coinTopPosition = 220;
+    this.coinHeight = 50;
+
     this.player;
+    this.score;
 
     var that = this;
+    this.initializeallOponent = function () {
+        that.score = 0;
+        that.allElementOnPathposition = [];
+        that.allElementOnPathClassName = [];
+        that.player = null;
 
+        for (var i = 0; i < that.allElementOnPath.length; i++) {
+
+            that.mainwrapper.removeChild(that.allElementOnPath[i]);
+        }
+        that.allElementOnPath = [];
+    };
     this.getcurrentplayer = function (currentplayer) {
         that.player = currentplayer;
     };
@@ -201,13 +316,16 @@ function OpponentsandCoins() {
         if (opponentDecider < 1) {
             that.makeLowerOpponent();
         }
-        if (opponentDecider < 1.25 && opponentDecider > 0.5) {
-            setTimeout(that.makeCoins, 100);
 
-        }
-        if (opponentDecider > 1) {
+
+        if (opponentDecider > 1 && opponentDecider < 2) {
             that.makeUpperOpponent();
         }
+        if (opponentDecider > 0.5 && opponentDecider < 1.25) {
+            that.makeCoins();
+
+        }
+
     };
     this.makeUpperOpponent = function () {
         var element = document.createElement('div');
@@ -237,12 +355,13 @@ function OpponentsandCoins() {
     };
 
     this.moveAllElementOnPath = function () {
+        that.score += 10;
         for (var i = 0; i < that.allElementOnPath.length; i++) {
             if (that.allElementOnPathposition[i] < 0) {
-                that.allElementOnPathposition.splice(that.allElementOnPathposition[i], 1);
+                that.allElementOnPathposition.splice(i, 1);
                 that.mainwrapper.removeChild(that.allElementOnPath[i]);
-                that.allElementOnPathClassName.splice(that.allElementOnPathClassName[i], 1);
-                that.allElementOnPath.splice(that.allElementOnPath[i], 1);
+                that.allElementOnPathClassName.splice(i, 1);
+                that.allElementOnPath.splice(i, 1);
             } else {
                 that.allElementOnPathposition[i] -= 10;
                 that.allElementOnPath[i].style.left = that.allElementOnPathposition[i] + "px";
@@ -256,18 +375,29 @@ function OpponentsandCoins() {
 
             switch (that.allElementOnPathClassName[i]) {
                 case "Loweropponent":
-                    if ((that.allElementOnPathposition[i] <= 150 && that.allElementOnPathposition[i] >= 50) && that.player.movingPlayerTopPos + that.player.playerCurrentHeight >= that.LoweropponentTopPosition) {
+                    if ((that.allElementOnPathposition[i] <= 175 && that.allElementOnPathposition[i] >= 75) && that.player.movingPlayerTopPos + that.player.playerCurrentHeight >= that.LoweropponentTopPosition) {
                         that.player.isfalling = true;
-                       
+
+
                     }
                     break;
                 case "Upperopponent":
-                    if ((that.allElementOnPathposition[i] <= 150 && that.allElementOnPathposition[i] >= 1) && that.player.movingPlayerTopPos < that.UpperopponentTopPosition + that.UpperopponentHeight) {
-                        that.player.isfalling = true;
-                       
+                    if ((that.allElementOnPathposition[i] <= 120 && that.allElementOnPathposition[i] >= 1) && that.player.movingPlayerTopPos < that.UpperopponentTopPosition + that.UpperopponentHeight) {
+                       that.player.isfalling = true;
+                      
+
                     }
                     break;
                 case "Coin":
+                    if ((that.allElementOnPathposition[i] <= 200 && that.allElementOnPathposition[i] >= 50) && that.player.movingPlayerTopPos < that.coinTopPosition + that.coinHeight) {
+                        // that.player.isfalling = true;
+                        that.score += 1000;
+                        that.allElementOnPathposition.splice(i, 1);
+                        console.log(that.allElementOnPath[i]);
+                        that.mainwrapper.removeChild(that.allElementOnPath[i]);
+                        that.allElementOnPathClassName.splice(i, 1);
+                        that.allElementOnPath.splice(i, 1);
+                    }
                     break;
                 default:
             }
@@ -278,12 +408,5 @@ function OpponentsandCoins() {
         return Math.random() * (max - min) + min;
     };
 
-    //    this.clearallTimer = function () {
-    //        that.isfalling = true;
-    //        that.fallingPlayerposition = that.movingPlayerTopPos;
-    //        that.player.style.width = "100px";
-    //        that.player.style.height = "50px";
-    //        that.player.style.background = "url(Images/fallingLimbo.png)";
-    //        that.fallingPlayerTimer = setInterval(that.fallingPlayer, 1);
-    //    };
+
 }
