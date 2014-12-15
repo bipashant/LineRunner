@@ -1,11 +1,17 @@
-﻿var newgame = new Game();
-newgame.initializeGame();
+﻿
 
+
+
+function startGame() {
+    var newgame = new Game();
+    newgame.initializeGame(); 
+}
 function Game() {
     this.mainwrapper = document.getElementsByClassName('main-wrapper')[0];
     this.movingBackGround = document.getElementsByClassName('buttom')[0];
+    this.menuscr = document.getElementById("menuscreen");
+    this.score = document.getElementById("scoreid");
     this.movingbackgroundLeftPosition = 0;
-
     this.maintimer;
     this.mainCounter = 0;
     var newplayer;
@@ -13,6 +19,8 @@ function Game() {
     var that = this;
 
     this.initializeGame = function () {
+
+        that.menuscr.style.display = "none";
         that.score = 0;
         that.newopp = new OpponentsandCoins();
 
@@ -48,10 +56,11 @@ function Game() {
             if (that.newplayer.fallingPlayerposition >= 505) {
                 window.cancelAnimationFrame(that.maintimer);
                 that.maintimer = undefined;
-
-                that.newopp.initializeallOponent();
+                that.menuscr.style.display = "block";
+                document.getElementById("scoreid").innerHTML = "Your Score :- "+that.newopp.score;
+                 that.newopp.initializeallOponent();
                 that.newplayer.initializePlayer();
-                that.initializeGame();
+//                 that.initializeGame();
 
 
             } else {
@@ -114,7 +123,7 @@ function Player() {
 
     };
 
-    document.onkeyup = function (e) {
+    document.onkeydown = function (e) {
         if (!that.isfalling && !that.ismoving) {
             switch (e.keyCode) {
                 case 37:
@@ -292,7 +301,7 @@ function OpponentsandCoins() {
     this.coinHeight = 50;
 
     this.player;
-    this.score;
+    this.score=0;
 
     var that = this;
     this.initializeallOponent = function () {
@@ -376,15 +385,15 @@ function OpponentsandCoins() {
             switch (that.allElementOnPathClassName[i]) {
                 case "Loweropponent":
                     if ((that.allElementOnPathposition[i] <= 175 && that.allElementOnPathposition[i] >= 75) && that.player.movingPlayerTopPos + that.player.playerCurrentHeight >= that.LoweropponentTopPosition) {
-                        that.player.isfalling = true;
 
+
+                       that.player.isfalling = true;
 
                     }
                     break;
                 case "Upperopponent":
                     if ((that.allElementOnPathposition[i] <= 120 && that.allElementOnPathposition[i] >= 1) && that.player.movingPlayerTopPos < that.UpperopponentTopPosition + that.UpperopponentHeight) {
                        that.player.isfalling = true;
-                      
 
                     }
                     break;
@@ -392,8 +401,9 @@ function OpponentsandCoins() {
                     if ((that.allElementOnPathposition[i] <= 200 && that.allElementOnPathposition[i] >= 50) && that.player.movingPlayerTopPos < that.coinTopPosition + that.coinHeight) {
                         // that.player.isfalling = true;
                         that.score += 1000;
+                    
                         that.allElementOnPathposition.splice(i, 1);
-                        console.log(that.allElementOnPath[i]);
+                       
                         that.mainwrapper.removeChild(that.allElementOnPath[i]);
                         that.allElementOnPathClassName.splice(i, 1);
                         that.allElementOnPath.splice(i, 1);

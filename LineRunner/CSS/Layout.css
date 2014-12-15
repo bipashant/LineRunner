@@ -51,7 +51,7 @@
 {
     height: 50px;
     width: 50px;
-    background-color: yellow;
+    background-image: url(../Images/Coin.png);
     border-radius: 100px;
     top: 220px;
     left: 1400px;
@@ -69,7 +69,7 @@
     top:0px;
     left: 139px;
     z-index: 100;
-    background-color: yellowgreen;
+    background-color:;
     font-size: 30px;
     
 }
@@ -77,8 +77,8 @@
     background-color: brown;
     height: 400px;
     width: 700px;
-    background-image: url(sprites/logo.png);
-    background-repeat: no-repeat;
+    background-image: url('../Images/logo.png');
+    background-repeat: no-repeat;   
     background-position: top;
     left: 30%;
     top: 150px;
@@ -89,7 +89,7 @@
     border: 5px #f2420e double;
 }
 .playbtn {
-    background-image: url('sprites/play.png');
+    background-image: url('../Images/play.png');
     border-radius: 30px;
     height: 93px;
     width: 150px;
